@@ -1,0 +1,71 @@
+<?xml version="1.0"?> 
+<project name="abgabe10-edermanu15" default="jar">
+	
+	<property file="build.properties" />
+	<path id="externalLibs">
+		<pathelement location="${libs}/junit-4.10.jar" />
+	</path>
+
+
+	<fileset id="javaCode" dir="${src.java}">
+		<include name="**/*.java" />
+	</fileset>
+
+	
+	<fileset id="junitTestCode" dir="${src.junit}">
+		<include name="**/*Test.java" />
+	</fileset>
+	
+	
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+	
+    <target name="prepare" description="prepare folder structure for compiling classes and generating documentation">
+		<mkdir dir="${target.java}" />
+		<mkdir dir="${target.junit}" />
+		<mkdir dir="${target.jar}" />
+    	<mkdir dir="${target.jar}" />
+    </target>
+
+	<target name="compile" depends="prepare" description="compiles java sources">
+		<javac srcdir="${src.java}" destdir="${target.java}" includeantruntime="false" />
+		<javac srcdir="${src.junit}" destdir="${target.junit}" includeantruntime="false">
+			<classpath>
+				<pathelement location="${target.java}"/>
+				<path refid="externalLibs" />
+			</classpath>
+		</javac>
+	</target>
+
+
+	<target name="test" depends="compile" description="testing the java source code" >
+	
+		<delete dir ="${target.testreports}" />
+		<mkdir dir ="${target.testreports}" />
+		
+		<junit printsummary = "yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${target.java}" />
+				<pathelement location="${target.junit}" />
+				<path refid="externalLibs" />
+			</classpath>
+		
+			<batchtest todir="${target.testreports}">
+				<fileset refid="junitTestCode" />
+			</batchtest>
+			<formatter type="plain" />
+		</junit>
+	</target>
+	
+	<target name="jar" depends="compile">
+			<javac srcdir="src" destdir="${target}/jar" includeantruntime="false"/>
+			<jar destfile="build/jar/Point2d.jar" basedir="${target}/jar">
+				<manifest>
+					<attribute name="Main-Class" value="at.fhj.itm.PointTester"/>
+				</manifest>
+			</jar>
+	</target>
+
+</project>
+
