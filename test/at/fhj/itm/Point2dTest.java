@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StringQueueTest 
+public class Point2dTest 
 {
 	 private Point2d pt;
 	    
